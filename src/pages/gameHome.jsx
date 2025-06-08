@@ -5,7 +5,7 @@ import DirectionalControls from "../components/directionalControl.jsx";
 import { useCharacter } from "../components/characterContext.jsx";
 import "./game.css";
 import PreventArrowScroll from "../components/preventArrowScroll.jsx";
-import homeCollision from "../collisionData/homeCollision.js"; 
+import homeCollision from "../Data/homeCollision.js"; 
 
 const Home = () => {
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ const Home = () => {
     }
 
     draw() {
-      // ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+      ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
       ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
   }
