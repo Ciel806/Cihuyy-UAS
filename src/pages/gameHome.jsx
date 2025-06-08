@@ -12,7 +12,9 @@ const Home = () => {
   const [currentEvent, setCurrentEvent] = useState(null);
   const { character } = useCharacter(); 
 
-  //collision
+
+
+  // collision
   const tileSize = 32;
   const mapWidthInTiles = 34;
   const offset = { x: -735, y: -650 };
