@@ -32,6 +32,8 @@ const Home = () => {
     }
   }
 
+
+  
   //   draw(){
   //     c.fillStyle ='red';
   //     c.fillReact(this.position.x, this.position.y, this.width, this.height);
