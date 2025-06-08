@@ -13,49 +13,103 @@ const Home = () => {
   const { character } = useCharacter(); 
 
   //collision
-  const homeCollision = []
-  for (let i = 0; i < homeCollision.length; i+= 34) {
-    collisionMap.push(homeCollision.slice(i, i + 34));
+  const tileSize = 32;
+  const mapWidthInTiles = 34;
+  const offset = { x: -735, y: -650 };
+
+  const colBoundaries = [];
+
+  for (let i = 0; i < homeCollision.length; i++) {
+    if (homeCollision[i] === 1157) {
+      const x = (i % mapWidthInTiles) * tileSize + offset.x;
+      const y = Math.floor(i / mapWidthInTiles) * tileSize + offset.y;
+
+      colBoundaries.push({
+        position: { x, y },
+        width: tileSize,
+        height: tileSize,
+      });
+    }
   }
 
-  class colBoundary {
-    static width = 32
-    static height = 32
-    constructor({position}){
-      this.position = position
-      this.width = 32
-      this.height = 32
-    }
-
-    draw(){
-      c.fillStyle ='red';
-      c.fillReact(this.position.x, this.position.y, this.width, this.height);
-    }
-  }
+  //   draw(){
+  //     c.fillStyle ='red';
+  //     c.fillReact(this.position.x, this.position.y, this.width, this.height);
+  //   }
+  // }
 
 
-  const boundaries = [];
+  // const boundaries = [];
   // const offset = { 
   //   x: -735, 
   //   y: -650
   // };
 
-  collisionMap.forEach((row, i) => {
+  // collisionMap.forEach((row, i) => {
+  //   row.forEach((symbol, j) => {
+  //     if (symbol === 1157) { 
+  //       boundaries.push(
+  //         new Boundary({
+  //           position: {
+  //             x: j * Boundary.width + offset.x,
+  //             y: i * Boundary.height + offset.y
+  //           }
+  //         })
+  //       )
+  //     }
+  //   })
+  // })
+
+  // console.log(boundaries);
+
+  useEffect(() => {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  class Boundary {
+    static width = 32;
+    static height = 32;
+
+    constructor({ position }) {
+      this.position = position;
+      this.width = Boundary.width;
+      this.height = Boundary.height;
+    }
+
+    draw() {
+      // ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+      ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+  }
+
+  const collisionsMap = [];
+  for (let i = 0; i < homeCollision.length; i += 34) {
+    collisionsMap.push(homeCollision.slice(i, i + 34));
+  }
+
+  const offset = { x: -735, y: -650 };
+  const boundaries = [];
+
+  collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
-      if (symbol === 1157) { 
+      if (symbol === 1157) {
         boundaries.push(
           new Boundary({
             position: {
               x: j * Boundary.width + offset.x,
-              y: i * Boundary.height + offset.y
-            }
+              y: i * Boundary.height + offset.y,
+            },
           })
-        )
+        );
       }
-    })
-  })
+    });
+  });
 
-  console.log(boundaries);
+  boundaries.forEach((boundary) => {
+    boundary.draw();
+  });
+}, []);
+
 
   const getCharacterImage = (color, isMoving) => {
     const characterImages = {
@@ -83,15 +137,15 @@ const Home = () => {
   };
 
   const {
-    position: playerPos,
-    rotation,
-    keys,
-    isFlipped,
-    setKeys,
-    setIsFlipped,
-    isMoving,
-    setIsMoving,
-  } = useMovement({ x: 0, y: 0 }, mapBoundaries, homeCollision); 
+  position: playerPos,
+  rotation,
+  keys,
+  isFlipped,
+  setKeys,
+  setIsFlipped,
+  isMoving,
+  setIsMoving
+} = useMovement({ x: 0, y: 0 }, mapBoundaries, colBoundaries);
 
   const cameraPos = { x: -playerPos.x, y: -playerPos.y };
 
@@ -216,6 +270,19 @@ const Home = () => {
                   />
                 </div>
               </div>
+
+              <canvas
+                id="gameCanvas"
+                width={1088}
+                height={1088}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: 0,
+                  backgroundColor: "black",
+                }}
+              />
 
               <DirectionalControls
                 keys={keys}
